@@ -1,0 +1,12 @@
+{
+  timestamp_hour: ISODate("2013-10-10T23:06:00.000Z"),// will contain hours
+  type: “Latency”,
+  values: {//will contain data for all pings in the specific hour
+    0: 999999,
+    …
+    37: 1000000,
+    38: 1500000,
+    … 
+    720: 2000000
+  }
+}

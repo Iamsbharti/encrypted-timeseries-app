@@ -1,0 +1,38 @@
+{
+  "name": "encrypted-timeseries",
+  "version": "1.0.0",
+  "description": "encrypted timeseries application",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iamsbharti/encrypted-timeseries-app.git"
+  },
+  "keywords": [
+    "node",
+    "mongodb",
+    "crypto",
+    "express",
+    "react"
+  ],
+  "author": "Saurabh Bharti",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Iamsbharti/encrypted-timeseries-app/issues"
+  },
+  "homepage": "https://github.com/Iamsbharti/encrypted-timeseries-app#readme",
+  "dependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.4.0"
+  }
+}
