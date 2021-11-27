@@ -18,12 +18,25 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+button {
+  box-sizing: border-box;
+  font-weight: 900;
+  font-size: 19px;
+  text-transform: inherit;
+  border-radius: 5px;
+  height: 35px;
+  margin-top: 20px;
+  cursor: pointer;
+  color: green;
+}
+button:hover {
+  background-color: white;
+  color: red;
+  transform: scale(1.1);
+}
 .App-link {
   color: #61dafb;
 }

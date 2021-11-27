@@ -10,3 +10,11 @@
     720: 2000000
   }
 }
+db.createCollection("weather", {
+  timeseries: {
+    timeField: "ts",
+    metaField: "source",
+    granularity: "minutes"
+  },
+    expireAfterSeconds: 9000 
+}); 
