@@ -6,7 +6,9 @@ import io from "socket.io-client";
 
 function TimeSeries() {
   const url =
-    process.env.NODE_ENV === "production" ? "" : "http://localhost:4242/enc";
+    process.env.NODE_ENV === "production"
+      ? "https://encrypted-timeseries-app.herokuapp.com/enc"
+      : "http://localhost:4242/enc";
   const [connSuccess, setConnSuccess] = React.useState([]);
   const [savedPayload, setSavedpayload] = React.useState([]);
   // effect
