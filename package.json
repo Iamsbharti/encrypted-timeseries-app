@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Iamsbharti/encrypted-timeseries-app#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
@@ -34,6 +35,7 @@
     "mongoose": "^6.0.13",
     "nodemon": "^2.0.15",
     "socket.io": "^4.4.0",
+    "urlencode": "^1.1.0",
     "ws": "^8.3.0"
   }
 }

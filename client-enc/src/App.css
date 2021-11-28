@@ -21,6 +21,14 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.payload {
+  margin-top: 40px;
+  height: 400px;
+  overflow-y: auto;
+}
+.payload > code {
+  font-size: 10px;
+}
 .connection__msg {
   color: green;
   font-size: small;

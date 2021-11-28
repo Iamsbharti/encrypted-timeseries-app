@@ -11,7 +11,7 @@ const timeSeriesDB = () => {
   });
   mongoose.connection.on("open", (error) => {
     error
-      ? console.error(`Error COnenctiong DB: ${error.message}`)
+      ? console.error(`Error Connecting DB: ${error.message}`)
       : console.log("DB CONNECTION SUCCESS");
   });
 };

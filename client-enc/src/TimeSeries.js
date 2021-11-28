@@ -8,6 +8,8 @@ function TimeSeries() {
   const url =
     process.env.NODE_ENV === "production" ? "" : "http://localhost:4242/enc";
   const [connSuccess, setConnSuccess] = React.useState([]);
+  const [savedPayload, setSavedpayload] = React.useState([]);
+  // effect
 
   let socket = io(url);
   // on connection
@@ -15,14 +17,21 @@ function TimeSeries() {
     console.log("welcome", data);
     setConnSuccess(data);
   });
-
+  // saved data
+  socket.on("recieved", (data) => {
+    console.log("DATA SAVED TO DB::", data);
+    setSavedpayload([...savedPayload, data]);
+    console.log("saved::", savedPayload);
+  });
   //payload tranfer logic
   let interval = null;
   const startPayloadTransfer = () => {
     console.log("startPayloadTransfer::", userdata);
-    interval = setInterval(() => {
+    /** interval = setInterval(() => {
       periodicTransmission();
-    }, 1000);
+    }, 1000);*/
+
+    periodicTransmission();
   };
   const periodicTransmission = () => {
     let randomUser = Math.floor(Math.random() * userdata.length);
@@ -37,8 +46,13 @@ function TimeSeries() {
   };
   const computeSecurityKey = (data) => {
     const { name, origin, destination } = data;
-    let messageHash = crypto.createHash("sha256");
+    let messageHash = crypto.createHash("sha256", "salt");
     messageHash.update(name + origin + destination);
+    console.log(
+      "messageHash::",
+      messageHash.digest("hex"),
+      messageHash.digest("hex").length
+    );
     return { ...data, secret_key: messageHash.digest("hex") };
   };
 
@@ -49,14 +63,25 @@ function TimeSeries() {
     // initialization vector
     const iv = crypto.randomBytes(16);
     // security key
-    const securitykey = crypto.randomBytes(32);
-    // the cipher function
-    const cipher = crypto.createCipheriv(algorithm, securitykey, iv);
+    const securityKey = crypto
+      .createHash("sha256")
+      .update(String("timeseries"))
+      .digest("base64")
+      .substr(0, 32);
 
-    let encryptedData = cipher.update(JSON.stringify(payload), "utf-8", "hex");
-    encryptedData += cipher.final("hex");
-    console.log("Encrypted message: " + encryptedData);
-    return encryptedData;
+    // the cipher function
+    const cipher = crypto.createCipheriv(algorithm, securityKey, iv);
+    console.log("strigify::payload::", JSON.stringify(payload));
+
+    const encryptedData = Buffer.concat([
+      cipher.update(JSON.stringify(payload)),
+      cipher.final(),
+    ]);
+
+    return {
+      iv: iv.toString("hex"),
+      content: encryptedData.toString("hex"),
+    };
   };
   // clear interval and stop payload transfer
   const stopPayloadTransfer = () => {
@@ -72,7 +97,15 @@ function TimeSeries() {
       <button style={{ color: "red" }} onClick={stopPayloadTransfer}>
         Stop Transfer
       </button>
-      <div className="payload"></div>
+      <div className="payload">
+        {savedPayload.map((data, index) => {
+          return (
+            <div key={index}>
+              <code>{`Data Saved for - ${data.name} - at ${data.timestamp_minute}`}</code>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
