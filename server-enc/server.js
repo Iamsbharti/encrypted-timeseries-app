@@ -26,6 +26,14 @@ app.all("*", function (req, res, next) {
 });
 
 if (process.env.NODE_ENV === "production") {
+  // api routes
+  app.get("/payload", function (req, res) {
+    getAllData(res);
+  });
+  app.get("/search/payload", function (req, res) {
+    console.log(req.params.search);
+    getFilterData(req.query.search, res);
+  });
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, "../client-enc/build")));
 

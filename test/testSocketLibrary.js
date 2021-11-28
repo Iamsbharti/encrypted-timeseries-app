@@ -63,4 +63,19 @@ describe("Socket Connection Test", () => {
       });
     });
   });
+  context("Get All Users", () => {
+    it("all users should be retunred", (done) => {
+      chai
+        .request(server)
+        .get(`http://localhost:4242/payload`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("status");
+          res.body.should.have.property("data");
+          res.body.should.have.property("data").to.be.an("array");
+          done();
+        });
+    });
+  });
 });
