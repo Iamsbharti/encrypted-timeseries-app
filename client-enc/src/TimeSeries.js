@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import userdata from "./data";
 import "./App.css";
 import crypto from "crypto";
 import io from "socket.io-client";
+let interval = null;
 
 function TimeSeries() {
   const url =
@@ -11,7 +12,12 @@ function TimeSeries() {
       : "http://localhost:4242/enc";
   const [connSuccess, setConnSuccess] = React.useState([]);
   const [savedPayload, setSavedpayload] = React.useState([]);
+  const [info, setInfo] = React.useState("");
+
   // effect
+  useEffect(() => {
+    setSavedpayload(savedPayload);
+  }, [savedPayload]);
 
   let socket = io(url);
   // on connection
@@ -23,17 +29,17 @@ function TimeSeries() {
   socket.on("recieved", (data) => {
     console.log("DATA SAVED TO DB::", data);
     setSavedpayload([...savedPayload, data]);
-    console.log("saved::", savedPayload);
   });
   //payload tranfer logic
-  let interval = null;
   const startPayloadTransfer = () => {
     console.log("startPayloadTransfer::", userdata);
-    /** interval = setInterval(() => {
-      periodicTransmission();
-    }, 1000);*/
+    setInfo("Transfer Started");
 
-    periodicTransmission();
+    interval = setInterval(() => {
+      periodicTransmission();
+    }, 1000);
+
+    //periodicTransmission();
   };
   const periodicTransmission = () => {
     let randomUser = Math.floor(Math.random() * userdata.length);
@@ -88,11 +94,14 @@ function TimeSeries() {
   // clear interval and stop payload transfer
   const stopPayloadTransfer = () => {
     // notify server about payload transfer termination
+    console.log("STOP INTERVAL::", interval);
+    setInfo("Transfer Stopped");
     clearInterval(interval);
   };
   // clear payload data
   const clearPayloadData = () => {
     setSavedpayload([]);
+    setInfo("");
   };
   return (
     <div>
@@ -102,6 +111,7 @@ function TimeSeries() {
       <button style={{ color: "red" }} onClick={stopPayloadTransfer}>
         Stop Transfer
       </button>
+
       <div className="payload">
         {savedPayload.map((data, index) => {
           return (
@@ -111,6 +121,7 @@ function TimeSeries() {
           );
         })}
       </div>
+      <p>{info}</p>
       <button
         style={{ color: "red" }}
         onClick={clearPayloadData}
@@ -119,7 +130,6 @@ function TimeSeries() {
       >
         Clear Payload Data
       </button>
-      <div></div>
     </div>
   );
 }
