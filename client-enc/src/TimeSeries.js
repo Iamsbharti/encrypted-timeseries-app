@@ -90,7 +90,10 @@ function TimeSeries() {
     // notify server about payload transfer termination
     clearInterval(interval);
   };
-
+  // clear payload data
+  const clearPayloadData = () => {
+    setSavedpayload([]);
+  };
   return (
     <div>
       <code className="connection__msg"> {connSuccess}</code>
@@ -108,6 +111,15 @@ function TimeSeries() {
           );
         })}
       </div>
+      <button
+        style={{ color: "red" }}
+        onClick={clearPayloadData}
+        hidden={savedPayload.length < 1}
+        on
+      >
+        Clear Payload Data
+      </button>
+      <div></div>
     </div>
   );
 }
