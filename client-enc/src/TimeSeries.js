@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import userdata from "./data";
 import "./App.css";
 import crypto from "crypto";
+import io from "socket.io-client";
 
 function TimeSeries() {
-  // flag to control payload transfer
+  const url =
+    process.env.NODE_ENV === "production" ? "" : "http://localhost:4242/enc";
+  const [connSuccess, setConnSuccess] = React.useState([]);
+
+  let socket = io(url);
+  // on connection
+  socket.on("welcome", (data) => {
+    console.log("welcome", data);
+    setConnSuccess(data);
+  });
+
+  //payload tranfer logic
   let interval = null;
   const startPayloadTransfer = () => {
     console.log("startPayloadTransfer::", userdata);
@@ -20,6 +32,8 @@ function TimeSeries() {
     // encrypt payload
     let encryptedPayload = encryptPayloadFunction(payloadWithSecretKey);
     console.log("Final encrypted payload::", encryptedPayload);
+    // emit payload transfer over socket
+    socket.emit("payloadTransfer", encryptedPayload);
   };
   const computeSecurityKey = (data) => {
     const { name, origin, destination } = data;
@@ -46,10 +60,14 @@ function TimeSeries() {
   };
   // clear interval and stop payload transfer
   const stopPayloadTransfer = () => {
+    // notify server about payload transfer termination
     clearInterval(interval);
   };
+
   return (
     <div>
+      <code className="connection__msg"> {connSuccess}</code>
+      <br />
       <button onClick={startPayloadTransfer}>Start Transfer</button>
       <button style={{ color: "red" }} onClick={stopPayloadTransfer}>
         Stop Transfer

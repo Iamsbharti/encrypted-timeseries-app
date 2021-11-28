@@ -1,13 +1,23 @@
-const WebSocket = require("ws");
+const { Server } = require("socket.io");
 
 exports.socketServer = (server) => {
-  let wss = new WebSocket.Server({ server: server });
-  wss.on("connection", (ws) => {
-    ws.on("message", (message) => {
-      console.log("received: %s", message);
-      ws.send(`Hello, you sent -> ${message}`);
-    });
+  console.log("Socket Sever Init");
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+  });
+  let myio = io.of("/enc");
+  let onlineUsers = [];
+  //on connection
+  myio.on("connect", (socket) => {
+    /**Emmitt welcome text */
+    socket.emit("welcome", "Server Socket Connection Success");
 
-    ws.send("connected");
+    // on payload transfer
+    socket.on("payloadTransfer", (data) => {
+      console.log("payload recieved:", data);
+    });
   });
 };

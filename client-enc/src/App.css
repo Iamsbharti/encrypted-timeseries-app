@@ -21,6 +21,11 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.connection__msg {
+  color: green;
+  font-size: small;
+  font-weight: bold;
+}
 button {
   box-sizing: border-box;
   font-weight: 900;

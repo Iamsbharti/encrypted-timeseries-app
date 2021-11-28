@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const { socketServer } = require("./socketConfig");
+const { timeSeriesDB } = require("./time-series-db");
 const app = express();
 dotenv.config();
-
+// connect to db
+timeSeriesDB();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
