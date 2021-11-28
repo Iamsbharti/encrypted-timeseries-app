@@ -5,15 +5,8 @@ dotenv.config();
 const library = require("../server-enc/library");
 const { savePayload, decryptPayload, validateDataIntegrity, persistData } =
   library;
-const server = require("../server-enc/server");
 // init socket
-const { socketServer } = require("../server-enc/socketConfig");
 const io = require("socket.io-client");
-const { assert } = require("chai");
-const url =
-  process.env.NODE_ENV === "production"
-    ? "https://encrypted-timeseries-app.herokuapp.com/enc"
-    : "http://localhost:4242/enc";
 
 describe("Socket Connection Test", () => {
   let socketTest;
