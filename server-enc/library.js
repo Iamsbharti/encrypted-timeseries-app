@@ -81,4 +81,9 @@ const persistData = (userdata, socket) => {
     }
   });
 };
-module.exports = { savePayload };
+module.exports = {
+  savePayload,
+  decryptPayload,
+  validateDataIntegrity,
+  persistData,
+};
