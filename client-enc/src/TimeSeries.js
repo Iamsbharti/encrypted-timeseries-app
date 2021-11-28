@@ -103,7 +103,7 @@ function TimeSeries() {
         {savedPayload.map((data, index) => {
           return (
             <div key={index}>
-              <code>{`Data Saved for - ${data.name} - at ${data.timestamp_minute}`}</code>
+              <code>{`Data Saved for - ${data.name} - at ${data.timeseries.timeField}`}</code>
             </div>
           );
         })}
