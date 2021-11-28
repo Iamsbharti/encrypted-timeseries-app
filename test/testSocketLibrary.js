@@ -29,19 +29,19 @@ describe("Socket Connection Test", () => {
       "reopen delay": 0,
       "force new connection": true,
     });
-    socketTest.on("connect", function (data) {
+    socketTest.on("connect", function () {
       console.log("Socket Test connection success");
       done();
     });
   });
 
   context("decrypt payload", () => {
-    it("should decrypt payload", () => {
+    it("should decrypt payload", (done) => {
       let decryptedPayloadTest = decryptPayload(encryptedPayload);
-
       decryptedPayloadTest.should.be.deep.equal(
         JSON.stringify(decryptedPayload)
       );
+      done();
     });
   });
   context("validate data integretity", () => {
@@ -61,21 +61,6 @@ describe("Socket Connection Test", () => {
       socketTest.on("recieved", function (data) {
         result.should.be.deep.equal(data);
       });
-    });
-  });
-  context("Get All Users", () => {
-    it("all users should be retunred", (done) => {
-      chai
-        .request(server)
-        .get(`http://localhost:4242/payload`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("status");
-          res.body.should.have.property("data");
-          res.body.should.have.property("data").to.be.an("array");
-          done();
-        });
     });
   });
 });
