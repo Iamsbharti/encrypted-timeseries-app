@@ -81,9 +81,45 @@ const persistData = (userdata, socket) => {
     }
   });
 };
+const getAllData = async (res) => {
+  User.find()
+    .lean()
+    .exec((err, users) => {
+      if (err) {
+        console.log("Error getting users data");
+        let response = { status: "error", data: err.message };
+        res.status(500).json(response);
+      } else {
+        console.log("users:::", users.length);
+        let response = { status: "success", data: users };
+        res.status(200).json(response);
+      }
+    });
+};
+const getFilterData = async (filter, res) => {
+  const queryOptions = {
+    $or: [
+      { origin: { $regex: new RegExp(filter.toLowerCase(), "i") } },
+      { name: { $regex: new RegExp(filter.toLowerCase(), "i") } },
+      { destination: { $regex: new RegExp(filter.toLowerCase(), "i") } },
+      { timeseries: { $regex: new RegExp(filter.toLowerCase(), "i") } },
+    ],
+  };
+  return User.find(queryOptions, (err, users) => {
+    if (err) {
+      console.log("Error Retrieving collection::", err);
+    } else {
+      console.log("Users Found::", users);
+      let response = { status: "success", data: users };
+      res.status(200).json(response);
+    }
+  });
+};
 module.exports = {
   savePayload,
   decryptPayload,
   validateDataIntegrity,
   persistData,
+  getAllData,
+  getFilterData,
 };

@@ -6,6 +6,8 @@ import io from "socket.io-client";
 let interval = null;
 
 function TimeSeries() {
+  const apiUrl =
+    process.env.NODE_ENV === "production" ? "" : "http://localhost:4242/";
   const url =
     process.env.NODE_ENV === "production"
       ? "https://encrypted-timeseries-app.herokuapp.com/enc"
@@ -13,6 +15,7 @@ function TimeSeries() {
   const [connSuccess, setConnSuccess] = React.useState([]);
   const [savedPayload, setSavedpayload] = React.useState([]);
   const [info, setInfo] = React.useState("");
+  const [searchOption, setSearchOption] = React.useState("");
 
   // effect
   useEffect(() => {
@@ -38,8 +41,6 @@ function TimeSeries() {
     interval = setInterval(() => {
       periodicTransmission();
     }, 1000);
-
-    //periodicTransmission();
   };
   const periodicTransmission = () => {
     let randomUser = Math.floor(Math.random() * userdata.length);
@@ -103,6 +104,24 @@ function TimeSeries() {
     setSavedpayload([]);
     setInfo("");
   };
+  // fetch all users data
+  const fetchAllData = () => {
+    fetch(`${apiUrl}payload`)
+      .then((response) => response.json())
+      .then((data) => setSavedpayload(data.data))
+      .catch((err) => {
+        console.error("Error calling API::", err.statu);
+      });
+  };
+  // fetch user by filter
+  const searchUserByFilter = () => {
+    fetch(`${apiUrl}search/payload/?search=${searchOption}`)
+      .then((response) => response.json())
+      .then((data) => setSavedpayload(data.data))
+      .catch((err) => {
+        console.error("Error calling API::", err.statu);
+      });
+  };
   return (
     <div>
       <code className="connection__msg"> {connSuccess}</code>
@@ -113,23 +132,46 @@ function TimeSeries() {
       </button>
 
       <div className="payload">
-        {savedPayload.map((data, index) => {
-          return (
-            <div key={index}>
-              <code>{`Data Saved for - ${data.name} - at ${data.timeseries.timeField}`}</code>
-            </div>
-          );
-        })}
+        <div className="actions">
+          <div className="search">
+            <input
+              type="text"
+              name="search"
+              placeholder="search user by name,origin,destination,timestamp"
+              style={{ width: "100%" }}
+              value={searchOption}
+              onChange={(e) => setSearchOption(e.target.value)}
+            />
+            <button style={{ color: "red" }} onClick={searchUserByFilter}>
+              Search User
+            </button>
+          </div>
+
+          <button
+            style={{ color: "red" }}
+            onClick={clearPayloadData}
+            hidden={savedPayload.length < 1}
+            on
+          >
+            Clear Payload Data
+          </button>
+          <br />
+          <button style={{ color: "red" }} onClick={fetchAllData}>
+            Get All User Data
+          </button>
+        </div>
+        <div className="user-info">
+          {setSavedpayload.length > 0 &&
+            savedPayload.map((data, index) => {
+              return (
+                <div key={index}>
+                  <code>{`Data Saved for - ${data.name} - at ${data.timeseries.timeField}`}</code>
+                </div>
+              );
+            })}
+        </div>
       </div>
       <p>{info}</p>
-      <button
-        style={{ color: "red" }}
-        onClick={clearPayloadData}
-        hidden={savedPayload.length < 1}
-        on
-      >
-        Clear Payload Data
-      </button>
     </div>
   );
 }

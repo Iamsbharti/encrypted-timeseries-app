@@ -22,9 +22,25 @@
   color: white;
 }
 .payload {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.user-info {
   margin-top: 40px;
   height: 300px;
   overflow-y: auto;
+}
+input {
+  width: 800px;
+  padding: 10px 20px;
+  margin: 8px 3px 4px 4px;
+  margin-left: 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-sizing: border-box;
 }
 .payload > code {
   font-size: 10px;

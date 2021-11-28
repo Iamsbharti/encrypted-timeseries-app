@@ -5,6 +5,8 @@ const cors = require("cors");
 const path = require("path");
 const { socketServer } = require("./socketConfig");
 const { timeSeriesDB } = require("./time-series-db");
+const { getAllData, getFilterData } = require("./library");
+
 const app = express();
 dotenv.config();
 // connect to db
@@ -44,5 +46,14 @@ const server = app.listen(port, () =>
 // add socket
 let socketInit = socketServer(server);
 console.log("socketInit", socketInit);
+
+// api routes
+app.get("/payload", function (req, res) {
+  getAllData(res);
+});
+app.get("/search/payload", function (req, res) {
+  console.log(req.params.search);
+  getFilterData(req.query.search, res);
+});
 /**for tests */
 module.exports = app;
