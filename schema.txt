@@ -1,20 +1,11 @@
-{
-  timestamp_hour: ISODate("2013-10-10T23:06:00.000Z"),// will contain hours
-  type: “Latency”,
-  values: {//will contain data for all pings in the specific hour
-    0: 999999,
-    …
-    37: 1000000,
-    38: 1500000,
-    … 
-    720: 2000000
-  }
-}
-db.createCollection("weather", {
+
+db.createCollection("User", {
+  name:"name",
+  origin:"origin",
+  destination:"destination",
   timeseries: {
     timeField: "ts",
     metaField: "source",
     granularity: "minutes"
   },
-    expireAfterSeconds: 9000 
 }); 
